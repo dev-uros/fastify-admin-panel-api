@@ -9,6 +9,7 @@
     "build": "rimraf dist && npx tsc",
     "dev": "tsx watch ./src/server.ts",
     "make:migration": "tsx src/database/commands/generateMigrationFile.ts",
+    "make:module": "tsx src/commands/generateModule.ts",
     "database:generate-types": "kysely-codegen",
     "database:migrate": "tsx src/database/commands/runMigrations.ts"
   },
