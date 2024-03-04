@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  db:
+    container_name: fastify-admin-panel-database
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fastify_admin_panel
+    ports:
+      - '7604:5432'
+    volumes:
+      - fastify-admin-panel-database:/var/lib/postgresql/data
+  db-test:
+    container_name: fastify-admin-panel-database-test
+    image: postgres:14.1-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fastify_admin_panel_test
+    ports:
+      - '7603:5432'
+  redis:
+    container_name: fastify-admin-panel-redis
+    image: redis:7.2.0-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - fastify-admin-panel-redis:/data
+volumes:
+  fastify-admin-panel-database:
+    driver: local
+  fastify-admin-panel-redis:
+    driver: local

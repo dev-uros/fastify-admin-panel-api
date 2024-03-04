@@ -5,9 +5,6 @@ import ajvErrors from 'ajv-errors'
 import ajvKeywords from 'ajv-keywords'
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 
-// export async function build(opts: {}) {
-//   const app = Fastify(opts)
-// }
 let logger
 if (process.stdout.isTTY) {
   logger = { transport: { target: 'pino-pretty' } }

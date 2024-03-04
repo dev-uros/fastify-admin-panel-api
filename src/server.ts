@@ -2,7 +2,7 @@ import app from './app'
 
 import closeWithGrace from 'close-with-grace'
 
-app.listen({ host: '127.0.0.1', port: 3001 }).then(() => {
+app.listen({ host: app.config.HOST, port: Number(app.config.PORT) }).then(() => {
   console.log(app.config.PORT)
 })
 
@@ -12,6 +12,6 @@ closeWithGrace(async ({ err }) => {
     app.log.error({ err }, 'server closing due to error')
   }
   app.log.info('shutting down gracefully')
-  // await app.db.destroy()
+  await app.db.destroy()
   await app.close()
 })
