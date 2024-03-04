@@ -18,6 +18,7 @@ const app = Fastify({
     customOptions: {
       allErrors: true
     },
+    //@ts-ignore
     plugins: [
       [
         ajvErrors,
@@ -26,6 +27,7 @@ const app = Fastify({
           singleError: false
         }
       ],
+      //@ts-ignore
       ajvKeywords
     ]
   }
