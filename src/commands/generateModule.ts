@@ -35,11 +35,11 @@ async function generateModule(moduleName: string) {
         {path: path.join(modulePath, 'README.md'), content: generateModuleReadmeContent()},
         {path: path.join(modulePath, 'index.ts'), content: generateModuleIndexContent()},
         {path: path.join(modulePath, 'repositories', `${moduleName}Repository.ts`), content: generateRepositoryContent()},
-        // path.join(modulePath, 'repositories', `${moduleName}RepositoryInterface.ts`),
-        // path.join(modulePath, 'routes', 'index.ts'),
-        // path.join(modulePath, 'schemas', 'index.ts'),
-        // path.join(modulePath, 'services', `${moduleName}Service.ts`),
-        // path.join(modulePath, 'services', `${moduleName}ServiceInterface.ts`)
+        {path: path.join(modulePath, 'repositories', `${moduleName}RepositoryInterface.ts`), content: generateRepositoryInterfaceContent()},
+        {path: path.join(modulePath, 'routes', 'index.ts'), content: generateRoutes()},
+        {path: path.join(modulePath, 'schemas', 'index.ts'), content: generateSchemas()},
+        {path: path.join(modulePath, 'services', `${moduleName}Service.ts`), content: generateServiceContent()},
+        {path: path.join(modulePath, 'services', `${moduleName}ServiceInterface.ts`), content: generateServiceInterfaceContent()},
     ];
 
     await Promise.all(files.map((file: {path: string, content: string}) => fs.writeFile(file.path, file.content)));
@@ -95,27 +95,121 @@ function generateModuleReadmeContent(){
 
 
 function generateRepositoryContent() {
+    const repositoryName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
     return `import fp from "fastify-plugin";
-import ${moduleName}RepositoryInterface from "./${moduleName}RepositoryInterface";
+import ${repositoryName}RepositoryInterface from "./${moduleName}RepositoryInterface";
 export default fp(async(fastify, opts)=>{
 
-    class ${moduleName}Repository implements ${moduleName}RepositoryInterface{
+    class ${repositoryName}Repository implements ${repositoryName}RepositoryInterface{
 
     }
 
-    await fastify.decorate('${moduleName}Repository', new ${moduleName}Repository())
+    await fastify.decorate('${repositoryName}Repository', new ${repositoryName}Repository())
 }, {
-    name: '${moduleName}Repository',
+    name: '${repositoryName}Repository',
     dependencies: ['database']
 })
 
 
 declare module 'fastify' {
     export interface FastifyInstance {
-        ${moduleName}Repository: ${moduleName}RepositoryInterface
+        ${repositoryName}Repository: ${repositoryName}RepositoryInterface
     }
 }
 `;
+}
+
+function generateRepositoryInterfaceContent() {
+    const interfaceName = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+    return `export default interface ${interfaceName}RepositoryInterface {
+
+}`;
+}
+
+function generateRoutes(){
+
+    const moduleNameFirstLetterCapitalized = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+
+    return `import { FastifyPluginAsync } from 'fastify'
+import {
+  ${moduleName}BootstrapResponseSchema,
+  ${moduleNameFirstLetterCapitalized}BootstrapResponseSchemaType
+} from '../schemas'
+
+const ${moduleName}Routes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
+  fastify.route<{
+    Reply: ${moduleNameFirstLetterCapitalized}BootstrapResponseSchemaType
+  }>({
+    url: '/',
+    method: 'GET',
+    preHandler: async (request, reply) => {
+      fastify.log.info('Hello from ${moduleName} pre handler!')
+    },
+    handler: async (request, reply) => {
+      return reply.send({
+        message: 'hello from /${moduleName}'
+      })
+    },
+    schema: {
+      tags: ['${moduleName}'],
+      summary: '${moduleNameFirstLetterCapitalized} Domain Module',
+      description: '${moduleNameFirstLetterCapitalized} Domain Module Bootstrap',
+      response: {
+        200: ${moduleName}BootstrapResponseSchema,
+      }
+    }
+  })
+}
+
+export default ${moduleName}Routes
+`;
+}
+
+function generateSchemas(){
+    const moduleNameFirstLetterCapitalized = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+
+    return `import { Static, Type } from '@sinclair/typebox'
+
+export const ${moduleName}BootstrapResponseSchema = Type.Object(
+  {
+    message: Type.String()
+  },
+  {
+    additionalProperties: false
+  }
+)
+
+export type ${moduleNameFirstLetterCapitalized}BootstrapResponseSchemaType = Static<
+  typeof ${moduleName}BootstrapResponseSchema
+>
+`;
+}
+
+function generateServiceContent(){
+    const moduleNameFirstLetterCapitalized = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+
+    return `import fp from 'fastify-plugin'
+import {${moduleNameFirstLetterCapitalized}ServiceInterface} from "./${moduleName}ServiceInterface";
+
+export default fp(async(fastify, opts)=>{
+
+    class ${moduleNameFirstLetterCapitalized}Service implements ${moduleNameFirstLetterCapitalized}ServiceInterface{
+
+    }
+
+    fastify.decorate('${moduleNameFirstLetterCapitalized}Service', new ${moduleNameFirstLetterCapitalized}Service());
+}, {
+    name: '${moduleNameFirstLetterCapitalized}Service',
+    dependencies: ['database', '${moduleNameFirstLetterCapitalized}Repository']
+})`;
+}
+
+function generateServiceInterfaceContent(){
+    const moduleNameFirstLetterCapitalized = moduleName.charAt(0).toUpperCase() + moduleName.slice(1);
+
+    return `export interface ${moduleNameFirstLetterCapitalized}ServiceInterface{
+
+}`;
 }
 
 // Parse command-line arguments

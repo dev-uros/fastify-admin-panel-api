@@ -7,26 +7,23 @@ import {
 const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   fastify.route<{
     Reply: UserBootstrapResponseSchemaType
-    Body: UserBootstrapResponseSchemaType
   }>({
     url: '/',
-    method: 'POST',
+    method: 'GET',
     preHandler: async (request, reply) => {
       fastify.log.info('Hello from users pre handler!')
     },
     handler: async (request, reply) => {
       return reply.send({
-        message: request.body.message
+        message: 'hello from /users'
       })
     },
     schema: {
       tags: ['users'],
       summary: 'User Domain Module',
       description: 'User Domain Module Bootstrap',
-      body: userBootstrapResponseSchema,
       response: {
         200: userBootstrapResponseSchema,
-        400: userBootstrapResponseSchema
       }
     }
   })
