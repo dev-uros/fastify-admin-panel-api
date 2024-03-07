@@ -24,7 +24,7 @@ export default async function generateUser(numberOfUsersForCreation: number = 1)
 
             if (emailExists || profilePictureExists) return undefined;
 
-            const dbUser = await app.UserRepository.storeUser(app.db, user);
+            const dbUser = await app.UserRepository.storeUser(transaction, user);
 
             if(dbUser){
                 usersCreated++
