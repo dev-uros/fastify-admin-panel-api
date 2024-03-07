@@ -42,6 +42,7 @@ export default async function generateUser(numberOfUsersForCreation: number = 1)
                 .returningAll()
                 .executeTakeFirst();
 
+
             if(dbUser){
                 usersCreated++
 
