@@ -18,30 +18,13 @@ export default async function generateUser(numberOfUsersForCreation: number = 1)
         }
 
         const dbUser = await app.db.transaction().execute(async (transaction) => {
-            const emailExists = await transaction
-                .selectFrom('users')
-                .select('id')
-                .where('email', '=', user.email)
-                .executeTakeFirst();
+            const emailExists = await app.UserRepository.checkDoesUserEmailExist(transaction, user.email)
 
-            const profilePictureExists = await transaction
-                .selectFrom('users')
-                .select('id')
-                .where('profile_picture_path', '=', user.profile_picture_path)
-                .executeTakeFirst();
+            const profilePictureExists = await app.UserRepository.checkDoesUserProfilePictureExist(transaction, user.profile_picture_path)
 
             if (emailExists || profilePictureExists) return undefined;
 
-            const dbUser = await transaction.insertInto('users')
-                .values({
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    email: user.email,
-                    profile_picture_path: user.profile_picture_path
-                })
-                .returningAll()
-                .executeTakeFirst();
-
+            const dbUser = await app.UserRepository.storeUser(app.db, user);
 
             if(dbUser){
                 usersCreated++
