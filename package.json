@@ -11,7 +11,8 @@
     "make:migration": "tsx src/database/commands/generateMigrationFile.ts",
     "make:module": "tsx src/commands/generateModule.ts",
     "database:generate-types": "kysely-codegen",
-    "database:migrate": "tsx src/database/commands/runMigrations.ts"
+    "database:migrate": "tsx src/database/commands/runMigrations.ts",
+    "database:seed": "tsx src/database/seeders/databaseSeeder.ts"
   },
   "keywords": [],
   "author": "",
