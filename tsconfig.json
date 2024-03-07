@@ -15,10 +15,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "ts-node": {
-    // Tell ts-node CLI to install the --loader automatically
-    "esm": true
-  },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
