@@ -23,7 +23,7 @@ const blogRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       summary: 'Blog Domain Module',
       description: 'Blog Domain Module Bootstrap',
       response: {
-        200: blogBootstrapResponseSchema,
+        200: blogBootstrapResponseSchema
       }
     }
   })
