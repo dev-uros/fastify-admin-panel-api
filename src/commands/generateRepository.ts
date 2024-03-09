@@ -27,8 +27,8 @@ async function getAllSubfolders(folderPath: string) {
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const rootPath = path.resolve(__dirname, '../'); // Adjust '../' if needed
-const folderPath = path.join(rootPath, 'modules'); // Change 'your-folder-name' to your folder name
+const rootPath = path.resolve(__dirname, '../');
+const folderPath = path.join(rootPath, 'modules');
 const projectModules = await getAllSubfolders(folderPath)
 
 const moduleOptions: { name: string, value: string }[] = [];
@@ -54,8 +54,8 @@ let newRepositoryName = await input({
     transformer: (repositoryName: string) => repositoryName.trim()
 });
 
-newRepositoryName = newRepositoryName + 'Repository.ts'
-let newRepositoryInterfaceName = newRepositoryName + 'RepositoryInterface.ts';
+// newRepositoryName = newRepositoryName + 'Repository.ts'
+// let newRepositoryInterfaceName = newRepositoryName + 'RepositoryInterface.ts';
 
 const repositoryPath = path.join(__dirname, '..', '..', 'src', 'modules', selectedModuleForRepositoryCreation, 'repositories', newRepositoryName);
 const modulePath = path.join(__dirname, '..', '..', 'src', 'modules', selectedModuleForRepositoryCreation);
@@ -72,9 +72,9 @@ try {
 
 // Create files
 const files = [
-    {path: path.join(modulePath, 'repositories', newRepositoryName), content: generateRepositoryContent()},
+    {path: path.join(modulePath, 'repositories', `${newRepositoryName}Repository.ts`), content: generateRepositoryContent()},
     {
-        path: path.join(modulePath, 'repositories', newRepositoryInterfaceName),
+        path: path.join(modulePath, 'repositories', `${newRepositoryName}RepositoryInterface.ts`),
         content: generateRepositoryInterfaceContent()
     },
 ];
@@ -85,7 +85,7 @@ await Promise.all(files.map((file: { path: string, content: string }) => fs.writ
 function generateRepositoryContent() {
     const repositoryName = newRepositoryName.charAt(0).toUpperCase() + newRepositoryName.slice(1);
     return `import fp from "fastify-plugin";
-import ${newRepositoryInterfaceName} from "./${newRepositoryName}RepositoryInterface";
+import ${repositoryName}RepositoryInterface from "./${newRepositoryName}RepositoryInterface";
 export default fp(async(fastify, opts)=>{
 
     class ${repositoryName}Repository implements ${repositoryName}RepositoryInterface{
