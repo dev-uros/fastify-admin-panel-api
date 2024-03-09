@@ -30,6 +30,7 @@
     "@fastify/swagger-ui": "^3.0.0",
     "@fastify/type-provider-typebox": "^4.0.0",
     "@fastify/under-pressure": "^8.3.0",
+    "@inquirer/prompts": "^4.1.0",
     "@sinclair/typebox": "^0.32.15",
     "ajv-errors": "^3.0.0",
     "ajv-keywords": "^5.1.0",
