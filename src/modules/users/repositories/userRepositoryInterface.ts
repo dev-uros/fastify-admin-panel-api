@@ -1,4 +1,4 @@
-import {Insertable, Kysely, Selectable, Transaction} from "kysely";
+import {Kysely, Selectable, Transaction} from "kysely";
 import {DB, Users} from "kysely-codegen";
 
 export default interface UserRepositoryInterface {

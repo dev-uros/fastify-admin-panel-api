@@ -1,6 +1,6 @@
 import fp from "fastify-plugin";
 import UserRepositoryInterface from "./userRepositoryInterface";
-import {Insertable, Kysely, Selectable, Transaction} from "kysely";
+import  {Kysely, Selectable, Transaction} from "kysely";
 import {DB, Users} from "kysely-codegen";
 export default fp(async(fastify, opts)=>{
 
