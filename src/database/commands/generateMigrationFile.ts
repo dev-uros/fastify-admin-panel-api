@@ -42,7 +42,7 @@ import { Kysely, sql } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
     // Migration code
-    await db.schema
+    const migration =  db.schema
         .createTable('${options.tableName}')
             .addColumn('id', 'serial', (col) => col.primaryKey())
             .addColumn('first_name', 'varchar', (col) => col.notNull())
@@ -52,13 +52,20 @@ export async function up(db: Kysely<any>): Promise<void> {
             .addColumn('created_at', 'timestamp', (col) =>
                 col.defaultTo(sql\`now()\`).notNull()
             )
-       
-        .execute();
+            .compile();
+
+            console.log({sql: migration.sql})
+
+            await db.executeQuery(migration);
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
     // Migration code
-    await db.schema.dropTable('${options.tableName}').execute();
+    const migration =  db.schema.dropTable('${options.tableName}').compile();
+
+    console.log({sql: migration.sql})
+
+    await db.executeQuery(migration)
 }
 `;
     } else {
@@ -67,10 +74,14 @@ import { Kysely } from 'kysely';
 
 export async function up(db: Kysely<any>): Promise<void> {
     // Migration code
-    await db.schema
-        .alterTable('${options.tableName}')    
+    const migration = db.schema
+        .alterTable('${options.tableName}')
         .alterColumn('some_column', (ac) => ac.setDataType('varchar(255)'))
-        .execute()   
+        .compile()
+
+        console.log({sql: migration.sql})
+
+        await db.executeQuery(migration)
 }
 
 `;
