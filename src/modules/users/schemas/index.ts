@@ -1,10 +1,6 @@
-import { Static, TSchema, TString, Type } from '@sinclair/typebox'
-export const DateKind = Symbol('DateKind')
-export interface TDate extends TSchema {
-  type: 'string'
-  $static: Date
-  kind: typeof DateKind
-}
+import { Static, TString, Type } from '@sinclair/typebox'
+import { TDate } from 'types/customTypes'
+
 
 const UserSchema = Type.Object({
   id: Type.Number(),
