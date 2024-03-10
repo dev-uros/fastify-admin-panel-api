@@ -1,10 +1,18 @@
 import fp from "fastify-plugin";
 import UserRepositoryInterface from "./userRepositoryInterface";
-import {Kysely, Transaction} from "kysely";
-import {DB} from "kysely-codegen";
+import {Insertable, Kysely, Selectable, Transaction} from "kysely";
+import {DB, Users} from "kysely-codegen";
 export default fp(async(fastify, opts)=>{
 
     class UserRepository implements UserRepositoryInterface{
+
+        public async getUserList(executor: Kysely<DB> | Transaction<DB>): Promise<Selectable<Users>[]>{
+            return await executor
+            .selectFrom('users')
+            .selectAll()
+            .orderBy('id')
+            .execute()
+        }
         public async checkDoesUserEmailExist(executor: Kysely<DB> | Transaction<DB>, email: string){
             return await executor
                 .selectFrom('users')

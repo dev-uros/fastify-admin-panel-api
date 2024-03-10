@@ -15,7 +15,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     },
     handler: async (request, reply) => {
       return reply.send({
-        message: 'hello from /users'
+        message: 'User list',
+        data: await fastify.UserService.getUserList()
       })
     },
     schema: {
@@ -23,7 +24,7 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       summary: 'User Domain Module',
       description: 'User Domain Module Bootstrap',
       response: {
-        200: userBootstrapResponseSchema,
+        200: userBootstrapResponseSchema
       }
     }
   })
