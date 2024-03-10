@@ -12,6 +12,7 @@
     "make:module": "tsx src/commands/generateModule.ts",
     "make:repository": "tsx src/commands/generateRepository.ts",
     "make:service": "tsx src/commands/generateService.ts",
+    "make:schema": "tsx src/commands/generateSchema.ts",
     "database:generate-types": "kysely-codegen",
     "database:migrate": "tsx src/database/commands/runMigrations.ts",
     "database:seed": "tsx src/database/seeders/databaseSeeder.ts"
