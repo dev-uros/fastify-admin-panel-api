@@ -1,51 +1,52 @@
 import Fastify from 'fastify'
 import AutoLoad from '@fastify/autoload'
-import { join } from 'desm'
+import {join} from 'desm'
 import ajvErrors from 'ajv-errors'
 import ajvKeywords from 'ajv-keywords'
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
+import {TypeBoxTypeProvider} from '@fastify/type-provider-typebox'
+import {ajvFilePlugin} from '@fastify/multipart';
 
 let logger
 if (process.stdout.isTTY) {
-  logger = { transport: { target: 'pino-pretty' } }
+    logger = {transport: {target: 'pino-pretty'}}
 } else {
-  logger = true
+    logger = true
 }
 
 const app = Fastify({
-  logger: logger,
-  ajv: {
-    customOptions: {
-      allErrors: true
-    },
-    //@ts-ignore
-    plugins: [
-      [
-        ajvErrors,
-        {
-          keepErrors: false,
-          singleError: false
-        }
-      ],
-      //@ts-ignore
-      ajvKeywords
-    ]
-  }
+    logger: logger,
+    ajv: {
+        customOptions: {
+            allErrors: true
+        },
+        plugins: [
+            [
+                ajvErrors,
+                {
+                    keepErrors: false,
+                    singleError: false
+                }
+            ],
+            ajvKeywords,
+            ajvFilePlugin
+
+        ]
+    }
 })
 
 app.withTypeProvider<TypeBoxTypeProvider>()
 
 await app.register(AutoLoad, {
-  dir: join(import.meta.url, 'plugins'),
-  forceESM: true,
-  encapsulate: false
+    dir: join(import.meta.url, 'plugins'),
+    forceESM: true,
+    encapsulate: false
 })
 
 await app.register(AutoLoad, {
-  dir: join(import.meta.url, 'modules'),
-  encapsulate: false,
-  forceESM: true,
-  maxDepth: 1
+    dir: join(import.meta.url, 'modules'),
+    encapsulate: false,
+    forceESM: true,
+    maxDepth: 1
 })
 
 export default app

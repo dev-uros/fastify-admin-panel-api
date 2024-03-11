@@ -1,16 +1,19 @@
 import fp from 'fastify-plugin'
 import { UserServiceInterface } from './userServiceInterface'
-import { Insertable, Selectable } from 'kysely'
+import {Insertable, Selectable} from 'kysely'
 import { Users } from 'kysely-codegen'
 
 export default fp(
   async (fastify, opts) => {
     class UserService implements UserServiceInterface {
       async getUserList(): Promise<Selectable<Users>[]> {
-        const data = await fastify.UserRepository.getUserList(fastify.db)
-        console.log(data[0].created_at)
         return await fastify.UserRepository.getUserList(fastify.db)
       }
+
+      async storeUser(userData: Insertable<Users>): Promise<Selectable<Users> | undefined>{
+          return await fastify.UserRepository.storeUser(fastify.db, userData)
+      }
+
     }
 
     await fastify.decorate('UserService', new UserService())
