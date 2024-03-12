@@ -37,6 +37,7 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     url: '/',
     method: 'GET',
     preHandler: async (request, reply) => {
+      console.log(fastify.appRootPath)
       fastify.log.info('Hello from users INDEX pre handler!')
     },
     handler: async (request, reply) => {
@@ -61,13 +62,12 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     url: '/',
     method: 'POST',
     preHandler: async (request, reply) => {
-
       const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
       const uploadDirectory = path.join(__dirname) + '/test.png'
       await fs.writeFile(
         uploadDirectory,
-        request.body.profile_picture_path.file,
+        request.body.profile_picture_path.file
       )
       console.log('File saved successfully:', uploadDirectory)
 
