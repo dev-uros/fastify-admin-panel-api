@@ -8,7 +8,11 @@ export default fp(
     await fastify.decorate('storagePath', `${fastify.appRootPath}/src/storage/`)
     await fastify.decorate(
       'userProfilePicturePath',
-      `${fastify.appRootPath}/src/public/user-profile-pictures/`
+      (fileName: string): string => {
+        return (
+          `${fastify.appRootPath}/src/public/user-profile-pictures/` + fileName
+        )
+      }
     )
   },
 
@@ -21,6 +25,6 @@ declare module 'fastify' {
     appRootPath: string
     publicPath: string
     storagePath: string
-    userProfilePicturePath: string
+    userProfilePicturePath(fileName: string): string
   }
 }

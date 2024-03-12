@@ -18,7 +18,6 @@ export default fp(
         userData: UserStoreRequestSchemaType
       ): Promise<Selectable<Users> | undefined> {
         return await fastify.db.transaction().execute(async transaction => {
-          const __dirname = path.dirname(new URL(import.meta.url).pathname)
           const uploadDirectory =
             path.join(__dirname) + `/${userData.profile_picture_path}`
           await fs.writeFile(

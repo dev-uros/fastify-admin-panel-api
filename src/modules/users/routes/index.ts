@@ -62,9 +62,13 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     url: '/',
     method: 'POST',
     preHandler: async (request, reply) => {
-      const __dirname = path.dirname(new URL(import.meta.url).pathname)
+      // const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
-      const uploadDirectory = path.join(__dirname) + '/test.png'
+      const uploadDirectory = fastify.userProfilePicturePath(
+        request.body.profile_picture_path.filename
+      )
+
+      // path.join(__dirname) + '/test.png'
       await fs.writeFile(
         uploadDirectory,
         request.body.profile_picture_path.file
