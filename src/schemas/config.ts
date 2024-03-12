@@ -11,7 +11,7 @@ export const configSchema = Type.Object(
       description: 'Application environment'
     }),
     HOST: Type.String({
-      default: '127.0.0.1',
+      default: 'localhost',
       description: 'Application host'
     }),
     DATABASE_NAME: Type.String({

@@ -68,12 +68,6 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       await fs.writeFile(
         uploadDirectory,
         request.body.profile_picture_path.file,
-        err => {
-          if (err) {
-            console.error('Error writing file:', err)
-            return
-          }
-        }
       )
       console.log('File saved successfully:', uploadDirectory)
 
