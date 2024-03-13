@@ -1,4 +1,4 @@
-import { Insertable, Selectable } from 'kysely'
+import { Selectable } from 'kysely'
 import { Users } from 'kysely-codegen'
 import {UserStoreRequestSchemaType} from "../schemas/userStoreSchema";
 

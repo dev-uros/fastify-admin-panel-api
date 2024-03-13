@@ -1,11 +1,9 @@
 import fp from 'fastify-plugin'
 import { UserServiceInterface } from './userServiceInterface'
-import { Insertable, Selectable } from 'kysely'
+import { Selectable } from 'kysely'
 import { Users } from 'kysely-codegen'
-import path from 'node:path'
 import fs from 'node:fs/promises'
 import { UserStoreRequestSchemaType } from '../schemas/userStoreSchema'
-import transform from 'ajv-keywords/dist/keywords/transform'
 
 export default fp(
   async (fastify, opts) => {
@@ -18,16 +16,18 @@ export default fp(
         userData: UserStoreRequestSchemaType
       ): Promise<Selectable<Users> | undefined> {
         return await fastify.db.transaction().execute(async transaction => {
-          const uploadDirectory =
-            path.join(__dirname) + `/${userData.profile_picture_path}`
+          const uploadDirectory = fastify.userProfilePicturePath(
+              userData.profile_picture_path.filename
+          )
           await fs.writeFile(
-            uploadDirectory,
+            uploadDirectory.uploadPath,
             userData.profile_picture_path.file
           )
 
-          userData.profile_picture_path = userData.profile_picture_path.filename
+          userData.profile_picture_path = uploadDirectory.publicPath
+          return await fastify.UserRepository.storeUser(transaction, userData)
+
         })
-        // return await fastify.UserRepository.storeUser(transform, userData)
       }
     }
 

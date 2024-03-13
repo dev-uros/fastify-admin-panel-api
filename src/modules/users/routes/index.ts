@@ -5,10 +5,8 @@ import {
 } from '../schemas/userListSchema'
 import {
   userStoreRequestSchema,
-  UserStoreRequestSchemaType
+  UserStoreRequestSchemaType, userStoreResponseSchema
 } from '../schemas/userStoreSchema'
-import fs from 'node:fs/promises'
-import path from 'node:path'
 import fastifyMultipart from '@fastify/multipart'
 const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   async function onFile(part: any) {
@@ -62,18 +60,6 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     url: '/',
     method: 'POST',
     preHandler: async (request, reply) => {
-      // const __dirname = path.dirname(new URL(import.meta.url).pathname)
-
-      const uploadDirectory = fastify.userProfilePicturePath(
-        request.body.profile_picture_path.filename
-      )
-
-      // path.join(__dirname) + '/test.png'
-      await fs.writeFile(
-        uploadDirectory,
-        request.body.profile_picture_path.file
-      )
-      console.log('File saved successfully:', uploadDirectory)
 
       fastify.log.info('Hello from users STORE pre handler!')
     },
@@ -91,7 +77,7 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       consumes: ['multipart/form-data'],
       body: userStoreRequestSchema,
       response: {
-        200: userListResponseSchema
+        200: userStoreResponseSchema
       }
     }
   })
