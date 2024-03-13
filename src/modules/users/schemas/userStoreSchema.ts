@@ -1,7 +1,5 @@
 import { Static, Type } from '@sinclair/typebox'
 import {UserEntitySchema} from "./userEntitySchema";
-import {TString} from "@sinclair/typebox/build/import";
-import {TDate} from "../../../types/customTypes";
 
 export const userStoreRequestSchema = Type.Object(
   {
