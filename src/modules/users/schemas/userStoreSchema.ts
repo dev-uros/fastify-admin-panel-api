@@ -1,5 +1,5 @@
 import { Static, Type } from '@sinclair/typebox'
-import {UserEntitySchema} from "./userEntitySchema";
+import { UserEntitySchema } from './userEntitySchema'
 
 export const userStoreRequestSchema = Type.Object(
   {
@@ -54,12 +54,13 @@ export const userStoreRequestSchema = Type.Object(
 export type UserStoreRequestSchemaType = Static<typeof userStoreRequestSchema>
 
 export const userStoreResponseSchema = Type.Object(
-    {
-      message: Type.String(),
-      data: UserEntitySchema
-    },
-    {
-      additionalProperties: false
-    }
+  {
+    message: Type.String(),
+    data: UserEntitySchema
+  },
+  {
+    description: 'Success response',
+    additionalProperties: false
+  }
 )
 export type UserStoreResponseSchemaType = Static<typeof userStoreResponseSchema>

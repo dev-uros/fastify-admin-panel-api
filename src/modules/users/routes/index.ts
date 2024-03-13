@@ -1,13 +1,19 @@
-import { FastifyPluginAsync } from 'fastify'
+import { FastifyError, FastifyPluginAsync } from 'fastify'
 import {
   userListResponseSchema,
   UserListResponseSchemaType
 } from '../schemas/userListSchema'
 import {
   userStoreRequestSchema,
-  UserStoreRequestSchemaType, userStoreResponseSchema
+  UserStoreRequestSchemaType,
+  userStoreResponseSchema
 } from '../schemas/userStoreSchema'
 import fastifyMultipart from '@fastify/multipart'
+import {
+  badRequestSchema,
+  failedValidationSchema,
+  serverErrorSchema
+} from 'schemas/errors'
 const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   async function onFile(part: any) {
     part.value = {
@@ -60,7 +66,25 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     url: '/',
     method: 'POST',
     preHandler: async (request, reply) => {
-
+      const allowProfilePictureMimeTypes = ['image/jpeg', 'image/png']
+      if (
+        !allowProfilePictureMimeTypes.includes(
+          request.body.profile_picture_path.mimetype
+        )
+      ) {
+        fastify.throwValidationError(
+          `Profile picture must be in jpg, jpeg or png format!`
+        )
+      }
+      const emailExists = await fastify.UserRepository.checkDoesUserEmailExist(
+        fastify.db,
+        request.body.email
+      )
+      if (emailExists) {
+        fastify.throwValidationError(
+          `E-mail: ${request.body.email} already taken!`
+        )
+      }
       fastify.log.info('Hello from users STORE pre handler!')
     },
     handler: async (request, reply) => {
@@ -77,7 +101,10 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
       consumes: ['multipart/form-data'],
       body: userStoreRequestSchema,
       response: {
-        200: userStoreResponseSchema
+        200: userStoreResponseSchema,
+        400: badRequestSchema,
+        422: failedValidationSchema,
+        500: serverErrorSchema
       }
     }
   })
