@@ -3,7 +3,8 @@ import fp from 'fastify-plugin'
 
 export default fp(async (fastify, opts) => {
   fastify.decorate('throwValidationError', (message: string): FastifyError => {
-    const error = new Error(message) as FastifyError
+    const error = new Error() as FastifyError
+    error.message = message;
     error.statusCode = 422
     throw error
   })

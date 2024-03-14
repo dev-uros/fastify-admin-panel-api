@@ -9,7 +9,7 @@ export const badRequestSchema = Type.Object(
 
 export const failedValidationSchema = Type.Object(
   {
-    messsage: Type.String()
+    message: Type.String()
   },
   { description: 'Failed validation response' }
 )

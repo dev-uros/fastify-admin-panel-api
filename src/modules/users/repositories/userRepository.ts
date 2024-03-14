@@ -1,6 +1,6 @@
 import fp from "fastify-plugin";
 import UserRepositoryInterface from "./userRepositoryInterface";
-import {Insertable, Kysely, Selectable, Transaction} from "kysely";
+import {Insertable, Kysely, Selectable, Transaction, Updateable} from "kysely";
 import {DB, Users} from "kysely-codegen";
 export default fp(async(fastify, opts)=>{
 
@@ -21,6 +21,14 @@ export default fp(async(fastify, opts)=>{
                 .executeTakeFirst();
         }
 
+        public async checkDoesUserEmailExistIgnoringUser(executor: Kysely<DB> | Transaction<DB>, email: string, userId: number){
+            return await executor
+                .selectFrom('users')
+                .select('id')
+                .where('email', '=', email)
+                .where('id', '!=', userId)
+                .executeTakeFirst();
+        }
         public async checkDoesUserProfilePictureExist(executor: Kysely<DB> | Transaction<DB>, profilePicture: string){
             return await executor
                 .selectFrom('users')
@@ -34,6 +42,15 @@ export default fp(async(fastify, opts)=>{
             return await executor
                 .insertInto('users')
                 .values(user)
+                .returningAll()
+                .executeTakeFirst();
+        }
+        public async updateUser(executor: Kysely<DB> | Transaction<DB>, user: Updateable<Users>, userId:number): Promise<Selectable<Users> | undefined>
+        {
+            return await executor
+                .updateTable('users')
+                .where('id', '=', userId)
+                .set(user)
                 .returningAll()
                 .executeTakeFirst();
         }

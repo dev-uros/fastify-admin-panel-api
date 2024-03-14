@@ -18,6 +18,8 @@ export default fp(async (fastify, opts) => {
         message: 'File too large!'
       })
     } else if (error.statusCode === 422) {
+      console.log('evo me')
+      console.log(error.message);
       return reply.status(error.statusCode).send({
         message: error.message
       })
