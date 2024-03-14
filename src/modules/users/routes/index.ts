@@ -20,6 +20,11 @@ import {
     UserUpdateRequestSchemaType,
     userUpdateResponseSchema
 } from "../schemas/userUpdateSchema";
+import {
+    userUpdateProfilePictureParamSchema,
+    userUpdateProfilePictureRequestSchema,
+    UserUpdateProfilePictureRequestSchemaType, userUpdateProfilePictureResponseSchema
+} from "../schemas/userUpdateProfilePictureSchema";
 
 const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     async function onFile(part: any) {
@@ -124,6 +129,12 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         url: '/:id',
         method: ['PATCH', 'PUT'],
         preHandler: async (request, reply) => {
+            const userExists = await fastify.UserRepository.getUserById(fastify.db, request.params.id);
+
+            if(!userExists){
+                fastify.throwValidationError('User for update not found')
+            }
+
             const emailExists = await fastify.UserRepository.checkDoesUserEmailExistIgnoringUser(
                 fastify.db,
                 request.body.email,
@@ -152,6 +163,54 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
             params: userUpdateParamSchema,
             response: {
                 200: userUpdateResponseSchema,
+                400: badRequestSchema,
+                422: failedValidationSchema,
+                500: serverErrorSchema
+            }
+        }
+    })
+
+
+    fastify.route<{
+        Body: UserUpdateProfilePictureRequestSchemaType,
+        Params: { id: number }
+    }>({
+        url: '/:id/update-profile-picture',
+        method: ['PATCH', 'PUT'],
+        preHandler: async (request, reply) => {
+            const allowProfilePictureMimeTypes = ['image/jpeg', 'image/png']
+            if (
+                !allowProfilePictureMimeTypes.includes(
+                    request.body.profile_picture_path.mimetype
+                )
+            ) {
+                fastify.throwValidationError(
+                    `Profile picture must be in jpg, jpeg or png format!`
+                )
+            }
+            const userExists = await fastify.UserRepository.getUserById(fastify.db, request.params.id);
+
+            if(!userExists){
+                fastify.throwValidationError('User for update not found')
+            }
+            fastify.log.info('Hello from users UPDATE pre handler!')
+        },
+        handler: async (request, reply) => {
+            console.log('evo iz handlera')
+            return reply.send({
+                message: 'Successfully updated user',
+                data: await fastify.UserService.updateUserProfilePicture(request.body, request.params.id)
+            })
+        },
+        schema: {
+            tags: ['users'],
+            summary: 'User Domain Module',
+            description: 'User Domain Module Bootstrap',
+            consumes: ['multipart/form-data'],
+            body: userUpdateProfilePictureRequestSchema,
+            params: userUpdateProfilePictureParamSchema,
+            response: {
+                200: userUpdateProfilePictureResponseSchema,
                 400: badRequestSchema,
                 422: failedValidationSchema,
                 500: serverErrorSchema

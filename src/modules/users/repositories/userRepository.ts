@@ -13,6 +13,14 @@ export default fp(async(fastify, opts)=>{
             .orderBy('id')
             .execute()
         }
+
+        public async getUserById(executor: Kysely<DB> | Transaction<DB>, userId:number): Promise<Selectable<Users> | undefined>{
+            return await executor
+                .selectFrom('users')
+                .selectAll()
+                .where('id', '=', userId)
+                .executeTakeFirst()
+        }
         public async checkDoesUserEmailExist(executor: Kysely<DB> | Transaction<DB>, email: string){
             return await executor
                 .selectFrom('users')

@@ -6,6 +6,8 @@ export default interface UserRepositoryInterface {
 
     getUserList(executor: Kysely<DB> | Transaction<DB>): Promise<Selectable<Users>[]>
 
+    getUserById(executor: Kysely<DB> | Transaction<DB>, userId:number): Promise<Selectable<Users> | undefined>
+
     checkDoesUserEmailExist(executor: Kysely<DB> | Transaction<DB>, email: string): Promise<{id:number} | undefined>
 
     checkDoesUserEmailExistIgnoringUser(executor: Kysely<DB> | Transaction<DB>, email: string, userId: number): Promise<{id:number} | undefined>
