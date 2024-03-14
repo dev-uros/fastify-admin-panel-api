@@ -217,6 +217,43 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
             }
         }
     })
+
+    fastify.route<{
+        Params: { id: number }
+    }>({
+        url: '/:id',
+        method: 'GET',
+        preHandler: async (request, reply) => {
+
+            const userExists = await fastify.UserRepository.getUserById(fastify.db, request.params.id);
+
+            if(!userExists){
+                fastify.throwValidationError('User for update not found')
+            }
+            fastify.log.info('Hello from users SHOW pre handler!')
+        },
+        handler: async (request, reply) => {
+            console.log('evo iz handlera')
+            return reply.send({
+                message: 'Successfully shown user',
+                data: await fastify.UserRepository.getUserById(fastify.db, request.params.id)
+            })
+        },
+        schema: {
+            tags: ['users'],
+            summary: 'User Domain Module',
+            description: 'User Domain Module Bootstrap',
+            consumes: ['application/json'],
+            body: userUpdateProfilePictureRequestSchema,
+            params: userUpdateProfilePictureParamSchema,
+            response: {
+                200: userUpdateProfilePictureResponseSchema,
+                400: badRequestSchema,
+                422: failedValidationSchema,
+                500: serverErrorSchema
+            }
+        }
+    })
 }
 
 export default userRoutes
