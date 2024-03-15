@@ -13,4 +13,6 @@ export interface UserServiceInterface {
 
     updateUserProfilePicture(userData: UserUpdateProfilePictureRequestSchemaType, userId: number): Promise<Selectable<Users> | undefined>
 
+    deleteUser(userId:number):Promise<Selectable<Users> | undefined>
+
 }

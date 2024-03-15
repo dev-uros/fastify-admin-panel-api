@@ -1,6 +1,6 @@
 import fp from "fastify-plugin";
 import UserRepositoryInterface from "./userRepositoryInterface";
-import {Insertable, Kysely, Selectable, Transaction, Updateable} from "kysely";
+import {Insertable, Kysely, Selectable, sql, Transaction, Updateable} from "kysely";
 import {DB, Users} from "kysely-codegen";
 export default fp(async(fastify, opts)=>{
 
@@ -59,6 +59,17 @@ export default fp(async(fastify, opts)=>{
                 .updateTable('users')
                 .where('id', '=', userId)
                 .set(user)
+                .returningAll()
+                .executeTakeFirst();
+        }
+
+        public async deleteUser(executor: Kysely<DB> | Transaction<DB>, userId: number): Promise<Selectable<Users> | undefined>{
+            return await executor
+                .updateTable('users')
+                .where('id', '=', userId)
+                .set({
+                    deleted_at: sql`now()`
+                })
                 .returningAll()
                 .executeTakeFirst();
         }

@@ -65,6 +65,12 @@ export default fp(
 
                 })
             }
+
+            async deleteUser(userId: number): Promise<Selectable<Users> | undefined> {
+
+                return await fastify.UserRepository.deleteUser(fastify.db, userId);
+
+            }
         }
 
         await fastify.decorate('UserService', new UserService())

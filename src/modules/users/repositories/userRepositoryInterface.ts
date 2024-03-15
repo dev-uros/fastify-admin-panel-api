@@ -18,4 +18,6 @@ export default interface UserRepositoryInterface {
 
     updateUser(executor: Kysely<DB> | Transaction<DB>, user: Updateable<Users>, userId: number): Promise<Selectable<Users> | undefined>
 
+    deleteUser(executor: Kysely<DB> | Transaction<DB>, userId: number):Promise<Selectable<Users> | undefined>
+
 }

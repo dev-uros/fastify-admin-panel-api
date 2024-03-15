@@ -6,6 +6,7 @@ export const UserEntitySchema = Type.Object({
   created_at: Type.String({ format: 'date' }) as TString | TDate, // Use 'date-time' format instead of 'date'
   first_name: Type.String(),
   last_name: Type.Union([Type.String(), Type.Null()]),
+  deleted_at: Type.Union([Type.Null(), Type.String({ format: 'date' })]),
   email: Type.String({ format: 'email' }), // Add format validation for email
   profile_picture_path: Type.String()
 })
