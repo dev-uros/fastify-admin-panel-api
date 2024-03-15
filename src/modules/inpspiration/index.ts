@@ -3,7 +3,7 @@ import { FastifyPluginOptions } from "fastify/types/plugin.js";
 import AutoLoad from "@fastify/autoload";
 import { join } from "desm";
 
-const cvarakDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOptions): Promise<void> => {
+const inpspirationDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOptions): Promise<void> => {
   await fastify.register(AutoLoad, {
     dir: join(import.meta.url, 'repositories'),
     ignorePattern: /Interface\.(js|ts)$/,
@@ -26,4 +26,4 @@ const cvarakDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOpti
   });
 };
 
-export default cvarakDomain;
+export default inpspirationDomain;
