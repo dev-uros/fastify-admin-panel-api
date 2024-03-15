@@ -43,10 +43,11 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'User List',
+            description: 'Returns list of all users',
             response: {
-                200: userListResponseSchema
+                200: userListResponseSchema,
+                500: serverErrorSchema
             }
         }
     })
@@ -86,8 +87,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'Store user',
+            description: 'Store new user',
             consumes: ['multipart/form-data'],
             body: userStoreRequestSchema,
             response: {
@@ -139,8 +140,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'Update user',
+            description: 'Update existing user',
             consumes: ['application/json'],
             body: userUpdateRequestSchema,
             params: userUpdateParamSchema,
@@ -191,8 +192,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'Update user profile picture',
+            description: 'Update existing user profile picture',
             consumes: ['multipart/form-data'],
             body: userUpdateProfilePictureRequestSchema,
             params: userUpdateProfilePictureParamSchema,
@@ -232,8 +233,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'Show user',
+            description: 'Show user details',
             consumes: ['application/json'],
             params: userShowParamSchema,
             response: {
@@ -269,8 +270,8 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         },
         schema: {
             tags: ['users'],
-            summary: 'User Domain Module',
-            description: 'User Domain Module Bootstrap',
+            summary: 'Delete user',
+            description: 'Deletes a user',
             consumes: ['application/json'],
             params: userDeleteParamSchema,
             response: {
