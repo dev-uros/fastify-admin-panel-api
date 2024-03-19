@@ -7,7 +7,6 @@ import {UserStoreRequestSchemaType} from '../schemas/userStoreSchema'
 import {UserUpdateRequestSchemaType} from "../schemas/userUpdateSchema";
 import {UserUpdateProfilePictureRequestSchemaType} from "../schemas/userUpdateProfilePictureSchema";
 import path from "path";
-import {string} from "yargs";
 import bcrypt from "bcrypt";
 
 export default fp(
@@ -18,12 +17,13 @@ export default fp(
             }
 
             async storeUser(
-                userData: UserStoreRequestSchemaType
+                userData: UserStoreRequestSchemaType & { password: string }
             ): Promise<Selectable<Users> | undefined> {
                 return await fastify.db.transaction().execute(async transaction => {
                     const uploadDirectory = fastify.userProfilePicturePath(
                         userData.profile_picture_path.filename
                     )
+
                     await fs.writeFile(
                         uploadDirectory.uploadPath,
                         userData.profile_picture_path.file
