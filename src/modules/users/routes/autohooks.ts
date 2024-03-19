@@ -1,13 +1,9 @@
 import { FastifyPluginAsync} from "fastify";
-import {RouteConfig} from "../../../types/customTypes";
-import {Selectable} from "kysely";
-import {Users} from "kysely-codegen";
-
 
 
 const userRouteAutohooks: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     fastify.decorateRequest('user', null);
-    fastify.addHook<{},RouteConfig>('onRequest', (request, reply, done) => {
+    fastify.addHook('onRequest', (request, reply, done) => {
         //authenticate user
         //authorize user
 
@@ -19,9 +15,5 @@ const userRouteAutohooks: FastifyPluginAsync = async (fastify, opts): Promise<vo
         done()
     })
 }
-declare module 'fastify' {
-    interface FastifyRequest {
-        user: Selectable<Users> | null
-    }
-}
+
 export default userRouteAutohooks
