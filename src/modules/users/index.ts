@@ -2,8 +2,7 @@ import {FastifyPluginAsync} from "fastify";
 import {FastifyPluginOptions} from "fastify/types/plugin.js";
 import AutoLoad from "@fastify/autoload";
 import {join} from "desm";
-import {Selectable} from "kysely/dist/esm";
-import {Users} from "kysely-codegen";
+
 
 const userDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOptions): Promise<void> => {
     await fastify.register(AutoLoad, {
@@ -32,12 +31,5 @@ const userDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOption
         encapsulate: true
     })
 }
-declare module 'fastify' {
-    interface FastifyRequest {
-        user: Selectable<Users> | null
-    }
-    interface  FastifyContextConfig{
-        routeName: string
-    }
-}
+
 export default userDomain;

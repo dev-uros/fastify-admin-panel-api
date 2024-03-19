@@ -1,8 +1,9 @@
 import { FastifyPluginAsync} from "fastify";
 
 
+
 const userRouteAutohooks: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-    fastify.decorateRequest('user', null);
+    // fastify.decorateRequest('user', null);
     fastify.addHook('onRequest', (request, reply, done) => {
         //authenticate user
         //authorize user
@@ -15,5 +16,12 @@ const userRouteAutohooks: FastifyPluginAsync = async (fastify, opts): Promise<vo
         done()
     })
 }
-
+declare module 'fastify' {
+    // interface FastifyRequest {
+    //     user: Selectable<Users> | null
+    // }
+    interface  FastifyContextConfig{
+        routeName: string
+    }
+}
 export default userRouteAutohooks
