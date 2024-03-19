@@ -6,3 +6,8 @@ export interface TDate extends TSchema {
   $static: Date
   kind: typeof DateKind
 }
+
+
+export interface RouteConfig {
+  routeName: string
+}
