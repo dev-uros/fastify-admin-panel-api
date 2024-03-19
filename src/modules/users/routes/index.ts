@@ -69,6 +69,7 @@ const userRoutes: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         method: 'GET',
         config: {routeName: 'User List'},
         preHandler: (request, reply, done) => {
+            console.log(request.user);
             console.log(request.routeOptions.config.routeName)
             done()
         },

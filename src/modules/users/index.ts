@@ -21,6 +21,11 @@ const userDomain: FastifyPluginAsync = async (fastify, opts: FastifyPluginOption
         options: {
             prefix: opts.prefix,
         },
+        indexPattern: /index\.(js|ts)$/,
+        ignorePattern: /.*\.js/,
+        autoHooks: true,
+        autoHooksPattern: /autohooks\.(js|ts)$/,
+        cascadeHooks: true,
         forceESM: true,
         encapsulate: true
     })
