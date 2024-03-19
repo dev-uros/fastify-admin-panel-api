@@ -7,6 +7,8 @@ import {UserStoreRequestSchemaType} from '../schemas/userStoreSchema'
 import {UserUpdateRequestSchemaType} from "../schemas/userUpdateSchema";
 import {UserUpdateProfilePictureRequestSchemaType} from "../schemas/userUpdateProfilePictureSchema";
 import path from "path";
+import {string} from "yargs";
+import bcrypt from "bcrypt";
 
 export default fp(
     async (fastify, opts) => {
@@ -28,6 +30,8 @@ export default fp(
                     )
 
                     userData.profile_picture_path = uploadDirectory.publicPath
+
+                    userData.password = await bcrypt.hash('Bobasmrad2@', 16);
                     return await fastify.UserRepository.storeUser(transaction, userData)
 
                 })

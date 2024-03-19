@@ -2,26 +2,28 @@ import fp from "fastify-plugin";
 import UserRepositoryInterface from "./userRepositoryInterface";
 import {Insertable, Kysely, Selectable, sql, Transaction, Updateable} from "kysely";
 import {DB, Users} from "kysely-codegen";
-export default fp(async(fastify, opts)=>{
 
-    class UserRepository implements UserRepositoryInterface{
+export default fp(async (fastify, opts) => {
 
-        public async getUserList(executor: Kysely<DB> | Transaction<DB>): Promise<Selectable<Users>[]>{
+    class UserRepository implements UserRepositoryInterface {
+
+        public async getUserList(executor: Kysely<DB> | Transaction<DB>): Promise<Selectable<Users>[]> {
             return await executor
-            .selectFrom('users')
-            .selectAll()
-            .orderBy('id')
-            .execute()
+                .selectFrom('users')
+                .selectAll()
+                .orderBy('id')
+                .execute()
         }
 
-        public async getUserById(executor: Kysely<DB> | Transaction<DB>, userId:number): Promise<Selectable<Users> | undefined>{
+        public async getUserById(executor: Kysely<DB> | Transaction<DB>, userId: number): Promise<Selectable<Users> | undefined> {
             return await executor
                 .selectFrom('users')
                 .selectAll()
                 .where('id', '=', userId)
                 .executeTakeFirst()
         }
-        public async checkDoesUserEmailExist(executor: Kysely<DB> | Transaction<DB>, email: string){
+
+        public async checkDoesUserEmailExist(executor: Kysely<DB> | Transaction<DB>, email: string) {
             return await executor
                 .selectFrom('users')
                 .select('id')
@@ -29,7 +31,7 @@ export default fp(async(fastify, opts)=>{
                 .executeTakeFirst();
         }
 
-        public async checkDoesUserEmailExistIgnoringUser(executor: Kysely<DB> | Transaction<DB>, email: string, userId: number){
+        public async checkDoesUserEmailExistIgnoringUser(executor: Kysely<DB> | Transaction<DB>, email: string, userId: number) {
             return await executor
                 .selectFrom('users')
                 .select('id')
@@ -37,7 +39,8 @@ export default fp(async(fastify, opts)=>{
                 .where('id', '!=', userId)
                 .executeTakeFirst();
         }
-        public async checkDoesUserProfilePictureExist(executor: Kysely<DB> | Transaction<DB>, profilePicture: string){
+
+        public async checkDoesUserProfilePictureExist(executor: Kysely<DB> | Transaction<DB>, profilePicture: string) {
             return await executor
                 .selectFrom('users')
                 .select('id')
@@ -45,16 +48,15 @@ export default fp(async(fastify, opts)=>{
                 .executeTakeFirst();
         }
 
-        public async storeUser(executor: Kysely<DB> | Transaction<DB>, user: Insertable<Users>): Promise<Selectable<Users> | undefined>
-        {
+        public async storeUser(executor: Kysely<DB> | Transaction<DB>, user: Insertable<Users>): Promise<Selectable<Users> | undefined> {
             return await executor
                 .insertInto('users')
                 .values(user)
                 .returningAll()
                 .executeTakeFirst();
         }
-        public async updateUser(executor: Kysely<DB> | Transaction<DB>, user: Updateable<Users>, userId:number): Promise<Selectable<Users> | undefined>
-        {
+
+        public async updateUser(executor: Kysely<DB> | Transaction<DB>, user: Updateable<Users>, userId: number): Promise<Selectable<Users> | undefined> {
             return await executor
                 .updateTable('users')
                 .where('id', '=', userId)
@@ -63,7 +65,7 @@ export default fp(async(fastify, opts)=>{
                 .executeTakeFirst();
         }
 
-        public async deleteUser(executor: Kysely<DB> | Transaction<DB>, userId: number): Promise<Selectable<Users> | undefined>{
+        public async deleteUser(executor: Kysely<DB> | Transaction<DB>, userId: number): Promise<Selectable<Users> | undefined> {
             return await executor
                 .updateTable('users')
                 .where('id', '=', userId)
